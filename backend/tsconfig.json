@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "rootDir": "../",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    "types": ["node"],
+
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+
+    "noEmitOnError": true,
+    "paths": {
+      "@*": ["./src/*"],
+      "@types/*": ["./src/types/*"],
+      "@globalShared/*": ["../shared/*"]
+    }
+  },
+  "include": ["src/**/*", "../shared/**/*", "../frontend/src/shared/utils/fetchApi.ts", "../frontend/src/shared/utils/crypto/encrypt.ts"],
+  "exclude": ["node_modules", "dist"]
+}

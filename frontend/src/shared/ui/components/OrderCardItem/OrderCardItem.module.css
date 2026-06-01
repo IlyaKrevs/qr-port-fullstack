@@ -1,0 +1,108 @@
+.orderItem {
+  background-color: var(--bg-surface);
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.orderItem:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.orderTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.clientName {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 16px;
+}
+
+.tableCode {
+  background-color: var(--color-primary);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.statusNew {
+  background-color: #f59e0b;
+  color: #1a1a1a;
+}
+
+.statusConfirmed {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.statusCompleted {
+  background-color: #10b981;
+  color: white;
+}
+
+.statusCancelled {
+  background-color: #ef4444;
+  color: white;
+}
+
+.date {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.orderContent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.orderItemRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+}
+
+.itemName {
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.itemQuantity {
+  color: var(--text-secondary);
+  font-size: 14px;
+  min-width: 60px;
+  text-align: right;
+}
+
+.controlsContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+.priceSummary {
+  font-weight: 600;
+  color: var(--color-primary);
+}

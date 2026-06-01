@@ -1,0 +1,26 @@
+.link {
+  padding: 6px 12px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+
+  background-color: var(--bg-surface-transparent);
+  cursor: pointer;
+}
+
+.link:hover {
+  color: var(--text-primary);
+  filter: brightness(0.85);
+}
+
+.active {
+  background-color: var(--color-primary);
+  color: var(--text-primary);
+}
+
+.active:hover {
+  filter: brightness(0.85);
+}

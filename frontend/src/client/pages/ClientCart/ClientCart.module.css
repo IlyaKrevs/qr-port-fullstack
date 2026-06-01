@@ -1,0 +1,72 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+
+  font-size: 20px;
+}
+
+.orderContainer {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.cartContainer {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.cartItem {
+  background-color: var(--bg-surface);
+  border-radius: 12px;
+  font-size: 16px;
+
+  padding: 10px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  border: 1px solid var(--border-color);
+}
+
+.cartItemControls {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 40px 40px 40px auto 40px;
+  align-items: center;
+  text-align: center;
+  gap: 5px;
+}
+
+.btnsContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.historyConatiner {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.historyTitle {
+  display: flex;
+  justify-content: center;
+}
+
+

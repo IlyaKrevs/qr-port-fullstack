@@ -1,0 +1,23 @@
+.container {
+  padding: 10px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--text-primary);
+}
+
+.title {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.description {
+  font-size: 12px;
+  font-weight: 500;
+}

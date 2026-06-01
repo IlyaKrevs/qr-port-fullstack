@@ -1,0 +1,11 @@
+# Frontend
+frontend/node_modules/
+
+# Backend
+backend/node_modules/
+backend/public/assets
+
+# Keys
+backend/src/utils/crypto/keys
+*.pem
+

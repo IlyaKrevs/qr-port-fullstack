@@ -1,0 +1,51 @@
+.appWrapper {
+  background-color: var(--bg-body);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  min-height: 100vh;
+  min-width: 100vw;
+  padding-bottom: 10px;
+}
+
+.topStickyContainer {
+  position: sticky;
+  padding: 10px 20px;
+  top: 0;
+  background-color: var(--bg-surface);
+  backdrop-filter: blur(5px);
+}
+
+.topStickyContainerInnerWrapper {
+  padding: 10px 0;
+}
+
+.navContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.infoContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 5px 0;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px;
+  width: 100%;
+}
+
+.textCenter {
+  text-align: center;
+}
+
+.textRight {
+  text-align: end;
+}

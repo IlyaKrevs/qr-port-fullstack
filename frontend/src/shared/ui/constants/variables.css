@@ -1,0 +1,15 @@
+:root {
+  --bg-body: #111827;
+  --bg-surface: rgba(31, 41, 55, 0.9);
+  --bg-surface-transparent: rgba(255, 255, 255, 0.05);
+
+  --border-color: #374151;
+
+  --text-primary: #f3f4f6;
+  --text-secondary: #9ca3af;
+
+  --color-primary: #3b82f6;
+  --color-secondary: #6c757d;
+  --color-success: #10b981;
+  --color-danger: #ef4444;
+}

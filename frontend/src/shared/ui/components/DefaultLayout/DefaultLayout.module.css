@@ -1,0 +1,39 @@
+.wrapper {
+  min-height: 100vh;
+  min-width: 100vw;
+  background-color: var(--bg-body);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 10px;
+}
+
+.navContainer {
+  display: flex;
+  gap: 20px;
+}
+
+.link {
+  padding: 6px 12px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.link:hover {
+  color: var(--text-primary);
+}
+
+.active {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.active:hover {
+}
