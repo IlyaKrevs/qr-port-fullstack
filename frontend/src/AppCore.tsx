@@ -9,7 +9,7 @@ import { useCatalogStore } from "@store/useCatalogStore";
 import { useSessionStore } from "@store/useSessionStore";
 import { useEffect } from "react";
 import { useOrderStore } from "@store/useOrderStore";
-import { useSetPrimaryData } from "@shared/hooks/useSetPublicKey";
+import { useSetPrimaryData } from "@shared/hooks/useSetPrimaryData";
 
 export const AppCore = () => {
   const [searchParams] = useSearchParams();

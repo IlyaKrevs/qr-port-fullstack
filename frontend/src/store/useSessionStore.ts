@@ -4,11 +4,11 @@ import { fetchApi } from "@shared/utils/fetchApi";
 import { createAsyncAction } from "./helpers/createAsyncAction";
 
 import { ENDPOINTS } from "@globalShared/api/endpoints";
-import type { IQPort } from "@globalShared/types/entities/Qport.entity";
+import type { IQRPort } from "@globalShared/types/entities/Qport.entity";
 
 interface ISessionState {
   userName: string | null;
-  userRole: IQPort["role"];
+  userRole: IQRPort["role"];
   qrCodeId: string | null;
   status: "none" | "pending" | "approved" | "rejected";
   sessions: string[];

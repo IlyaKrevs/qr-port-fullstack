@@ -1,6 +1,6 @@
 import type { ICartItem } from "./Product.entity";
 
-export interface IDefaultOrder {
+export interface IDefaultMessage {
   id: number;
   items: ICartItem[];
   qrCodeId: string;
@@ -9,10 +9,10 @@ export interface IDefaultOrder {
   status: "new" | "confirmed" | "completed" | "cancelled";
 }
 
-export interface IOrder extends IDefaultOrder {
+export interface IMessage extends IDefaultMessage {
   edited?: {
     by: string;
     at: string;
-    prevVersion: IDefaultOrder;
+    prevVersion: IDefaultMessage;
   }[];
 }

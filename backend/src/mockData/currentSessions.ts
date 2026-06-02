@@ -1,3 +1,3 @@
-import { IQPort } from "@globalShared/types/entities/Qport.entity";
+import { IQRPort } from "@globalShared/types/entities/Qport.entity";
 
-export const currentQportSessions: IQPort[] = [];
+export const currentQRportSessions: IQRPort[] = [];

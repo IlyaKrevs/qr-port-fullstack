@@ -1,6 +1,6 @@
 import type { IMessage } from "./Order.entity";
 
-export interface IQPort {
+export interface IQRPort {
   id: string;
   status: "open" | "private";
   role: "admin" | "guest";
