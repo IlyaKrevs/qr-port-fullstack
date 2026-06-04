@@ -10,7 +10,7 @@ import { ENDPOINTS } from "@globalShared/api/endpoints";
 import {
   IQRcodeItem,
   IQRPort,
-} from "@globalShared/types/entities/Qport.entity";
+} from "@globalShared/types/entities/QRport.entity";
 import { IProduct } from "@globalShared/types/entities/Product.entity";
 
 import { getCryptoKeys } from "@utils/crypto/getCryptoKeys";
@@ -18,7 +18,7 @@ import { PRODUCTS } from "@mockData/PRODUCTS";
 import { currentQRportSessions } from "@mockData/currentSessions";
 import { ApiError } from "@utils/basicApiFncs/ApiError";
 import { createEndpoint } from "@utils/basicApiFncs/createEndpoint";
-import { IMessage } from "@globalShared/types/entities/Order.entity";
+import { IOrder } from "@globalShared/types/entities/Order.entity";
 
 const PORT = 3000;
 const serverId = "serverName" + "_" + crypto.randomUUID();
@@ -115,7 +115,7 @@ app.get(
 // post - get all orders by qrCodeId
 app.post(
   ENDPOINTS.orders.getAll,
-  createEndpoint<{ qrCodeId: string }, IMessage[]>(async (req) => {
+  createEndpoint<{ qrCodeId: string }, IOrder[]>(async (req) => {
     const { qrCodeId } = req.body;
 
     const token = req.headers.authorization?.split(" ")[1];
@@ -124,7 +124,7 @@ app.post(
       throw new ApiError(401, "Unauthorized");
     }
 
-    const result: IMessage[] = currentQRportSessions
+    const result: IOrder[] = currentQRportSessions
       .filter((item) => item.id === qrCodeId)
       .flatMap((item) => item.messages);
 
@@ -134,7 +134,7 @@ app.post(
 
 app.post(
   ENDPOINTS.orders.create,
-  createEndpoint<IMessage, IMessage>(async (req) => {
+  createEndpoint<IOrder, IOrder>(async (req) => {
     const newOrder = req.body;
     const token = req.headers.authorization?.split(" ")[1];
 
@@ -142,7 +142,7 @@ app.post(
       throw new ApiError(401, "Unauthorized");
     }
 
-    if (newOrder.clientId !== token) {
+    if (newOrder.userUniqId !== token) {
       throw new ApiError(409, "Invalid token");
     }
 

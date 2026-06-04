@@ -1,4 +1,4 @@
-import { IQRcodeItem } from "@globalShared/types/entities/Qport.entity";
+import { IQRcodeItem } from "@globalShared/types/entities/QRport.entity";
 
 export const qrCodes: IQRcodeItem[] = [
   {
