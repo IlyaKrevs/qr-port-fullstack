@@ -1,18 +1,19 @@
+import { ISessions } from "./Session.entity";
 import type { ICartItem } from "./Product.entity";
 
-export interface IDefaultMessage {
+export interface IDefaultOrder {
   id: number;
-  items: ICartItem[];
-  qrCodeId: string;
-  clientId: string;
-  createdAt: string;
+  sessionId: ISessions["id"];
+  userUniqId: string;
+  createdAt: number;
   status: "new" | "confirmed" | "completed" | "cancelled";
+  items: ICartItem[];
 }
 
-export interface IMessage extends IDefaultMessage {
+export interface IOrder extends IDefaultOrder {
   edited?: {
     by: string;
     at: string;
-    prevVersion: IDefaultMessage;
+    prevVersion: IDefaultOrder;
   }[];
 }
