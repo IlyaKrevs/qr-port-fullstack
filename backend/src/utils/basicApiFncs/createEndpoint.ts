@@ -2,7 +2,7 @@ import { ApiResponse } from "@globalShared/types/api";
 import { Request, Response } from "express";
 import { ApiError } from "./ApiError";
 import { decryptAuthData } from "@utils/crypto/decrypt";
-import {  userConnections } from "@mockData/userConnections";
+import { userConnections } from "@mockData/userConnections";
 type AppRequest<
   T,
   P extends Record<string, string> = {},

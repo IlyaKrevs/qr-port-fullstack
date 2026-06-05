@@ -1,5 +1,5 @@
 export interface IQRPort {
-  id: number;
+  id: string;
   code: string;
   name: string;
 }

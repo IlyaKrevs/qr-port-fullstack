@@ -1,14 +1,16 @@
 import { IQRPort } from "@globalShared/types/entities/QRport.entity";
 import { ISession } from "@globalShared/types/entities/Session.entity";
 
-interface ISessionRepository {
+export interface ISessionRepository {
   currentSessions: ISession[];
   // create
   create(qrPortId: IQRPort["id"], userUniqId: string): ISession;
 
   // read
   getAll(): ISession[];
+  getAllActive(): ISession[];
   findBySessionId(sessionId: ISession["id"]): ISession | undefined;
+  findByQrPortId(qrId: IQRPort["id"]): ISession | undefined;
 
   // update
   addUser(sessionId: ISession["id"], userUniqId: string): boolean;
@@ -18,7 +20,7 @@ interface ISessionRepository {
   // delete
 }
 
-class SessionRepository implements ISessionRepository {
+export class SessionRepository implements ISessionRepository {
   static instance: SessionRepository;
   currentSessions: ISession[] = [];
 
@@ -34,6 +36,7 @@ class SessionRepository implements ISessionRepository {
       id: crypto.randomUUID(),
       qrPortId: qrPortId,
       usersUniqId: [userUniqId],
+      isPrivate: false,
       startedAt: Date.now(),
       endedAt: null,
     };
@@ -44,9 +47,15 @@ class SessionRepository implements ISessionRepository {
   getAll() {
     return this.currentSessions;
   }
+  getAllActive(): ISession[] {
+    return this.currentSessions.filter((i) => i.endedAt === null);
+  }
 
   findBySessionId(sessionId: ISession["id"]): ISession | undefined {
     return this.currentSessions.find((i) => i.id === sessionId);
+  }
+  findByQrPortId(qrId: IQRPort["id"]): ISession | undefined {
+    return this.currentSessions.find((i) => i.qrPortId === qrId);
   }
 
   addUser(sessionId: ISession["id"], userUniqId: string): boolean {

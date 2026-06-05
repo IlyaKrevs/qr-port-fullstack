@@ -1,6 +1,6 @@
 // const API_BASE = "";
 export const ENDPOINTS = {
-  qrcodes: {
+  qrCodes: {
     getAll: "/api/qports",
     create: "/api/qports",
     delete: (id: number) => `/api/qports/${id}`,
@@ -20,10 +20,10 @@ export const ENDPOINTS = {
   auth: {
     login: "/api/auth",
   },
-  session: {
+  sessions: {
     start: "/api/sessions/start",
-    getAll: "api/sessions/getAll",
-    close: `/api/sessions/close`,
+    getAllActive: "api/sessions/getAllActive",
+    close: "/api/sessions/close",
   },
   defaultData: "/api/defaultData",
 } as const;

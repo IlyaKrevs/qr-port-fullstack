@@ -19,6 +19,7 @@ import { currentQRportSessions } from "@mockData/currentSessions";
 import { ApiError } from "@utils/basicApiFncs/ApiError";
 import { createEndpoint } from "@utils/basicApiFncs/createEndpoint";
 import { IOrder } from "@globalShared/types/entities/Order.entity";
+import { sessionController } from "@features/session/sessionExport";
 
 const PORT = 3000;
 const serverId = "serverName" + "_" + crypto.randomUUID();
@@ -54,7 +55,7 @@ app.use(
 
 // GET - получить все существующие QR-codes
 app.get(
-  ENDPOINTS.qrcodes.getAll,
+  ENDPOINTS.qrCodes.getAll,
   createEndpoint<void, IQRcodeItem[]>(async () => {
     if (!qrCodes.length) {
       throw new ApiError(404, "No items");
@@ -65,7 +66,7 @@ app.get(
 
 // POST создать QR-code
 app.post(
-  ENDPOINTS.qrcodes.create,
+  ENDPOINTS.qrCodes.create,
   createEndpoint<{ name: string }, IQRcodeItem>(async (req, authData) => {
     const { name } = req.body;
 
@@ -89,7 +90,7 @@ app.post(
 
 // DELETE - удалить QR-code
 app.delete(
-  ENDPOINTS.qrcodes.deleteServer,
+  ENDPOINTS.qrCodes.deleteServer,
   createEndpoint<void, void, { id: string }>(async (req) => {
     const { id } = req.params;
 
@@ -179,58 +180,11 @@ app.post(
 //   }),
 // );
 
-// app.post(
-//   ENDPOINTS.session.start,
-//   createEndpoint<{ qrCodeId: string }, { qrCodeId: string; sessionId: string }>(
-//     async (req, authData) => {
-//       const { qrCodeId } = req.body;
-//       const current = currentQportSessions.find(
-//         (item) => item.qrCodeId === qrCodeId,
-//       );
+app.post(ENDPOINTS.sessions.start, sessionController.join);
 
-//       if (current?.status === "private") {
-//         throw new ApiError(409, "Session private!");
-//       }
+app.get(ENDPOINTS.sessions.getAllActive, sessionController.getAllActive);
 
-//       if (!current) {
-//         const newSession: IQRPort = {
-//           id: crypto.randomUUID(),
-//           qrCodeId: qrCodeId,
-//           createdAt: Date.now() + "",
-//           messages: [],
-//           status: "open",
-//           users: [],
-//         };
-//         currentQportSessions.push(newSession);
-
-//         return { qrCodeId, sessionId: newSession.id };
-//       } else {
-//         return { qrCodeId, sessionId: current.id };
-//       }
-//     },
-//   ),
-// );
-
-// ADMIN RESTRICTIONS!!!
-app.get(
-  ENDPOINTS.session.getAll,
-  createEndpoint<void, string[]>(async (req) => {
-    return currentQRportSessions.map((item) => item.id);
-  }),
-);
-
-app.delete(
-  ENDPOINTS.session.close,
-  createEndpoint<{ id: string }, void>(async (req) => {
-    const { id } = req.body;
-    const index = currentQRportSessions.findIndex((item) => item.id === id);
-    if (index === -1) {
-      throw new ApiError(404, "Session not found");
-    } else {
-      currentQRportSessions.splice(index, 1);
-    }
-  }),
-);
+app.post(ENDPOINTS.sessions.close, sessionController.close);
 
 // get public key + serverId for client
 app.get(ENDPOINTS.defaultData, (req, res) => {
