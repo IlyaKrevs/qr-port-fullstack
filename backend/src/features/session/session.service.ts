@@ -1,9 +1,9 @@
 import { IQRPort } from "@globalShared/types/entities/QRport.entity";
-import { ISessionRepository } from "./session.repository";
+import { SessionRepository } from "./session.repository";
 import { ISession } from "@globalShared/types/entities/Session.entity";
 
-export interface ISessionService {
-  sessionRepository: ISessionRepository;
+interface ISessionService {
+  sessionRepository: SessionRepository;
 
   getAllActive(): ISession[];
 
@@ -13,9 +13,9 @@ export interface ISessionService {
 }
 
 export class SessionService implements ISessionService {
-  sessionRepository: ISessionRepository;
+  sessionRepository: SessionRepository;
 
-  constructor(sessionRep: ISessionRepository) {
+  constructor(sessionRep: SessionRepository) {
     this.sessionRepository = sessionRep;
   }
 
@@ -43,6 +43,7 @@ export class SessionService implements ISessionService {
     }
     return session;
   }
+
   closeSession(sessionId: ISession["id"]): boolean {
     const session = this.sessionRepository.findBySessionId(sessionId);
     if (!session) {

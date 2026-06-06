@@ -7,10 +7,7 @@ import QRCode from "qrcode";
 import { qrCodes } from "./mockData/QRCodes";
 import { ENDPOINTS } from "@globalShared/api/endpoints";
 
-import {
-  IQRcodeItem,
-  IQRPort,
-} from "@globalShared/types/entities/QRport.entity";
+import { IQRPort } from "@globalShared/types/entities/QRport.entity";
 import { IProduct } from "@globalShared/types/entities/Product.entity";
 
 import { getCryptoKeys } from "@utils/crypto/getCryptoKeys";
@@ -20,24 +17,26 @@ import { ApiError } from "@utils/basicApiFncs/ApiError";
 import { createEndpoint } from "@utils/basicApiFncs/createEndpoint";
 import { IOrder } from "@globalShared/types/entities/Order.entity";
 import { sessionController } from "@features/session/sessionExport";
+import { qrPortController } from "@features/qrports/qrportExport";
+import { orderController } from "@features/orders/orderExport";
 
 const PORT = 3000;
 const serverId = "serverName" + "_" + crypto.randomUUID();
 
 const app = express();
 
-// create session for each QR-code
-qrCodes.forEach((item) => {
-  const newSession: IQRPort = {
-    id: crypto.randomUUID(),
-    role: "guest",
-    status: "open",
-    users: [],
-    messages: [],
-    createdAt: Date.now() + "",
-  };
-  currentQRportSessions.push(newSession);
-});
+// // create session for each QR-code
+// qrCodes.forEach((item) => {
+//   const newSession: IQRPort = {
+//     id: crypto.randomUUID(),
+//     role: "guest",
+//     status: "open",
+//     users: [],
+//     messages: [],
+//     createdAt: Date.now() + "",
+//   };
+//   currentQRportSessions.push(newSession);
+// });
 
 const allowedIps = [
   "http://localhost:5173",
@@ -53,55 +52,6 @@ app.use(
   }),
 );
 
-// GET - получить все существующие QR-codes
-app.get(
-  ENDPOINTS.qrCodes.getAll,
-  createEndpoint<void, IQRcodeItem[]>(async () => {
-    if (!qrCodes.length) {
-      throw new ApiError(404, "No items");
-    }
-    return qrCodes;
-  }),
-);
-
-// POST создать QR-code
-app.post(
-  ENDPOINTS.qrCodes.create,
-  createEndpoint<{ name: string }, IQRcodeItem>(async (req, authData) => {
-    const { name } = req.body;
-
-    if (qrCodes.some((i) => i.name.toLowerCase() === name.toLowerCase())) {
-      throw new ApiError(409, "Already exist!");
-    }
-
-    // Твой IP из локальной сети (замени на свой, если нужно)
-    const serverIp = "192.168.0.100";
-    const url = `http://${serverIp}:${PORT}/client?code=${name}`;
-
-    const qrDataUrl = await QRCode.toDataURL(url, {
-      width: 200,
-      margin: 2,
-      color: { dark: "#000000", light: "#FFFFFF" },
-    });
-    qrCodes.push({ id: Date.now(), name, qrDataUrl });
-    return { id: Date.now(), name, qrDataUrl };
-  }),
-);
-
-// DELETE - удалить QR-code
-app.delete(
-  ENDPOINTS.qrCodes.deleteServer,
-  createEndpoint<void, void, { id: string }>(async (req) => {
-    const { id } = req.params;
-
-    const index = qrCodes.findIndex((i) => i.id === +id);
-    if (index === -1) {
-      throw new ApiError(404, "QR-not found");
-    }
-    qrCodes.splice(index, 1);
-  }),
-);
-
 // GET - all catalog
 app.get(
   ENDPOINTS.catalog.getAll,
@@ -110,52 +60,6 @@ app.get(
       throw new ApiError(404, "Products not found");
     }
     return PRODUCTS;
-  }),
-);
-
-// post - get all orders by qrCodeId
-app.post(
-  ENDPOINTS.orders.getAll,
-  createEndpoint<{ qrCodeId: string }, IOrder[]>(async (req) => {
-    const { qrCodeId } = req.body;
-
-    const token = req.headers.authorization?.split(" ")[1];
-
-    if ((!qrCodeId || !token) && !allowedIps.includes(req.ip || "")) {
-      throw new ApiError(401, "Unauthorized");
-    }
-
-    const result: IOrder[] = currentQRportSessions
-      .filter((item) => item.id === qrCodeId)
-      .flatMap((item) => item.messages);
-
-    return result;
-  }),
-);
-
-app.post(
-  ENDPOINTS.orders.create,
-  createEndpoint<IOrder, IOrder>(async (req) => {
-    const newOrder = req.body;
-    const token = req.headers.authorization?.split(" ")[1];
-
-    if (!token) {
-      throw new ApiError(401, "Unauthorized");
-    }
-
-    if (newOrder.userUniqId !== token) {
-      throw new ApiError(409, "Invalid token");
-    }
-
-    const session = currentQRportSessions.find(
-      (item) => item.id === newOrder.qrCodeId,
-    );
-    if (!session) {
-      throw new ApiError(404, "Session not found");
-    }
-
-    session.messages.push({ ...newOrder });
-    return newOrder;
   }),
 );
 
@@ -179,6 +83,20 @@ app.post(
 //     }
 //   }),
 // );
+
+// post - get all orders by qrCodeId
+app.post(ENDPOINTS.orders.getAll, orderController.getAll);
+
+app.post(ENDPOINTS.orders.create, orderController.create);
+
+// GET - получить все существующие QR-codes
+app.get(ENDPOINTS.qrPorts.getAll, qrPortController.getAll);
+
+// POST создать QR-code
+app.post(ENDPOINTS.qrPorts.create, qrPortController.create);
+
+// DELETE - удалить QR-code
+app.delete(ENDPOINTS.qrPorts.deleteServer, qrPortController.delete);
 
 app.post(ENDPOINTS.sessions.start, sessionController.join);
 

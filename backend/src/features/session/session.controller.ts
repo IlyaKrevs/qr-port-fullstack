@@ -1,5 +1,5 @@
 import { createEndpoint } from "@utils/basicApiFncs/createEndpoint";
-import { ISessionService } from "./session.service";
+import { SessionService } from "./session.service";
 import { ISession } from "@globalShared/types/entities/Session.entity";
 
 // join
@@ -21,7 +21,7 @@ type CloseResponse = { sessionId: string };
 type CloseEndpoint = typeof createEndpoint<CloseBody, CloseResponse>;
 
 interface ISessionController {
-  sessionService: ISessionService;
+  sessionService: SessionService;
   authEndpoint: typeof createEndpoint;
   getAllActive(): ReturnType<GetAllActiveEndpoint>;
   join(): ReturnType<JoinEndpoint>;
@@ -29,9 +29,9 @@ interface ISessionController {
 }
 
 export class SessionController implements ISessionController {
-  sessionService: ISessionService;
+  sessionService: SessionService;
   authEndpoint: typeof createEndpoint;
-  constructor(sessionService: ISessionService, authFn: typeof createEndpoint) {
+  constructor(sessionService: SessionService, authFn: typeof createEndpoint) {
     this.sessionService = sessionService;
     this.authEndpoint = authFn;
   }

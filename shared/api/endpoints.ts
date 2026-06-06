@@ -1,10 +1,10 @@
 // const API_BASE = "";
 export const ENDPOINTS = {
-  qrCodes: {
-    getAll: "/api/qports",
-    create: "/api/qports",
-    delete: (id: number) => `/api/qports/${id}`,
-    deleteServer: "/api/qports/:id",
+  qrPorts: {
+    getAll: "/api/qrports",
+    create: "/api/qrports",
+    deleteClient: (id: number) => `/api/qrports/${id}`,
+    deleteServer: "/api/qrports/:id",
   },
   catalog: {
     getAll: "/api/catalog",
@@ -12,14 +12,15 @@ export const ENDPOINTS = {
   orders: {
     getAll: "/api/orders",
     create: "/api/orders/create",
-    decline: "/api/orders/decline",
+    changeStatus: "/api/orders/changeStatus",
   },
-  tables: {
-    list: "/api/tables",
-  },
-  auth: {
-    login: "/api/auth",
-  },
+  // delete it?
+  // tables: {
+  //   list: "/api/tables",
+  // },
+  // auth: {
+  //   login: "/api/auth",
+  // },
   sessions: {
     start: "/api/sessions/start",
     getAllActive: "api/sessions/getAllActive",

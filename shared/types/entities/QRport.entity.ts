@@ -1,5 +1,6 @@
 export interface IQRPort {
   id: string;
-  code: string;
+  qrCode: string;
+  role: "admin" | "guest";
   name: string;
 }

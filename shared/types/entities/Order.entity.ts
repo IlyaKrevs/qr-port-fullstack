@@ -1,9 +1,9 @@
-import { ISessions } from "./Session.entity";
+import { ISession } from "./Session.entity";
 import type { ICartItem } from "./Product.entity";
 
 export interface IDefaultOrder {
   id: number;
-  sessionId: ISessions["id"];
+  sessionId: ISession["id"];
   userUniqId: string;
   createdAt: number;
   status: "new" | "confirmed" | "completed" | "cancelled";
@@ -17,3 +17,6 @@ export interface IOrder extends IDefaultOrder {
     prevVersion: IDefaultOrder;
   }[];
 }
+
+
+
