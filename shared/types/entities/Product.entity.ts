@@ -7,8 +7,8 @@ export type ICartItem = ProductMustHave & {
 // Карточка продукта - изменяется в зависимости от бизнеса
 export type IProduct = ProductMustHave & {
   name: string;
-  description: string;
   price: number;
+  description: string;
 };
 
 export type NormalizedCatalog = Record<string, IProduct>;

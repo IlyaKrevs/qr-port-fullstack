@@ -1,11 +1,7 @@
 import { IOrder } from "@globalShared/types/entities/Order.entity";
 import { OrderService } from "./order.service";
-import {
-  AppResponse,
-  createEndpoint,
-} from "@utils/basicApiFncs/createEndpoint";
+import { createEndpoint } from "@utils/basicApiFncs/createEndpoint";
 import { ISession } from "@globalShared/types/entities/Session.entity";
-import { Request } from "express";
 
 // create
 type CreateBody = IOrder;
