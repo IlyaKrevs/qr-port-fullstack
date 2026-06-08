@@ -1,8 +1,9 @@
 import { ApiResponse } from "@globalShared/types/api";
 import { Request, Response } from "express";
 import { ApiError } from "./ApiError";
-import { decryptAuthData } from "@utils/crypto/decrypt";
-import { userConnections } from "@mockData/userConnections";
+
+import { connectionService } from "@features/connections/connections.service";
+
 type AppRequest<
   T,
   P extends Record<string, string> = {},
@@ -54,25 +55,8 @@ export const createEndpoint = <
     if (!authHeader) {
       throw new ApiError(401, "No auth header");
     }
-    const authData = decryptAuthData(authHeader);
+    const userUniqId = connectionService.connect(authHeader);
 
-    let userData = userConnections.get(authData.userUniqId);
-    if (!userData) {
-      userData = {
-        id: authData.userUniqId,
-        name: null,
-        nonce: [],
-        lastConnect: Date.now(),
-      };
-      userConnections.set(authData.userUniqId, userData);
-    }
-
-    if (userData.nonce.includes(authData.nonce)) {
-      throw new ApiError(409, "Reply request detected!");
-    }
-    userData.nonce.push(authData.nonce);
-    userData.lastConnect = Date.now();
-
-    return handler(req, authData.userUniqId);
+    return handler(req, userUniqId);
   });
 };
