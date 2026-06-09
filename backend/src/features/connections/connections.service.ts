@@ -5,16 +5,20 @@ import { ApiError } from "@utils/basicApiFncs/ApiError";
 
 interface IConnectionsService {
   connectionRepo: ConnectionsRepository;
+  intervalId: NodeJS.Timeout | undefined;
 
   connect(authHeader: string): string;
   updateRole(userUniqId: string, role: IQRPort["role"]): boolean;
   getRole(userUniqId: string): IQRPort["role"] | undefined;
   hasRole(userUniqId: string, allowedRoles: IQRPort["role"][]): boolean;
   cleanup(maxIdleMs: number): number;
+  startCleanup(): void;
+  stopCleanup(): void;
 }
 
-class ConnectionService implements IConnectionsService {
+export class ConnectionService implements IConnectionsService {
   connectionRepo: ConnectionsRepository;
+  intervalId: NodeJS.Timeout | undefined = undefined;
 
   constructor(repo: ConnectionsRepository) {
     this.connectionRepo = repo;
@@ -76,18 +80,23 @@ class ConnectionService implements IConnectionsService {
     }
     return deleted;
   }
+
+  startCleanup(): void {
+    const oneHour = 60 * 60 * 1e3;
+    const TTL = 12 * oneHour;
+    this.intervalId = setInterval(() => {
+      const count = this.cleanup(TTL);
+      console.log(`Connections deleted :${count}`);
+    }, oneHour);
+  }
+  stopCleanup(): void {
+    clearInterval(this.intervalId);
+    this.intervalId = undefined;
+  }
 }
 
 const repository = new ConnectionsRepository();
 const service = new ConnectionService(repository);
-
-// 1 hour
-const oneHour = 60 * 60 * 1e3;
-// 12 hours
-const TTL = 12 * oneHour;
-
-setInterval(() => {
-  service.cleanup(TTL);
-}, oneHour);
+service.startCleanup();
 
 export const connectionService = service;

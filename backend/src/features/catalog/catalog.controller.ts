@@ -34,8 +34,10 @@ type DeleteEndpoint = typeof createEndpoint<
 >;
 
 interface ICatalogController {
-  catalogService: CatalogService;
   authEndpoint: typeof createEndpoint;
+
+  catalogService: CatalogService;
+
   getAll(): ReturnType<GetAllEndpoint>;
   getById(): ReturnType<GetByIdEndpoint>;
   addNew(): ReturnType<AddNewEndpoint>;
@@ -43,10 +45,10 @@ interface ICatalogController {
 }
 
 export class CatalogController implements ICatalogController {
-  catalogService: CatalogService;
   authEndpoint: typeof createEndpoint;
+  catalogService: CatalogService;
 
-  constructor(catalogService: CatalogService, authFn: typeof createEndpoint) {
+  constructor(authFn: typeof createEndpoint, catalogService: CatalogService) {
     this.catalogService = catalogService;
     this.authEndpoint = authFn;
   }

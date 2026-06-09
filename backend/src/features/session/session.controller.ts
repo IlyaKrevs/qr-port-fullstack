@@ -1,6 +1,9 @@
 import { createEndpoint } from "@utils/basicApiFncs/createEndpoint";
 import { SessionService } from "./session.service";
 import { ISession } from "@globalShared/types/entities/Session.entity";
+import { QrPortService } from "@features/qrports/qrport.service";
+import { ConnectionService } from "@features/connections/connections.service";
+import { ApiError } from "@utils/basicApiFncs/ApiError";
 
 // join
 type JoinBody = { qrCodeId: string };
@@ -21,25 +24,44 @@ type CloseResponse = { sessionId: string };
 type CloseEndpoint = typeof createEndpoint<CloseBody, CloseResponse>;
 
 interface ISessionController {
-  sessionService: SessionService;
   authEndpoint: typeof createEndpoint;
+
+  sessionService: SessionService;
+  qrPortService: QrPortService;
+  connectionService: ConnectionService;
+
   getAllActive(): ReturnType<GetAllActiveEndpoint>;
   join(): ReturnType<JoinEndpoint>;
   close(): ReturnType<CloseEndpoint>;
 }
 
 export class SessionController implements ISessionController {
-  sessionService: SessionService;
   authEndpoint: typeof createEndpoint;
-  constructor(sessionService: SessionService, authFn: typeof createEndpoint) {
-    this.sessionService = sessionService;
+
+  sessionService: SessionService;
+  qrPortService: QrPortService;
+  connectionService: ConnectionService;
+
+  constructor(
+    authFn: typeof createEndpoint,
+    sessions: SessionService,
+    qrPorts: QrPortService,
+    connection: ConnectionService,
+  ) {
     this.authEndpoint = authFn;
+
+    this.sessionService = sessions;
+    this.qrPortService = qrPorts;
+    this.connectionService = connection;
   }
 
-  // todo - make roles check
   getAllActive() {
     return this.authEndpoint<GetAllActiveBody, GetAllActiveResponse>(
       async (req, userUniqId) => {
+        if (!this.connectionService.hasRole(userUniqId, ["admin"])) {
+          throw new ApiError(403, "Forbidden");
+        }
+
         const sessions = this.sessionService.getAllActive();
         return { sessions };
       },
@@ -50,6 +72,13 @@ export class SessionController implements ISessionController {
     return this.authEndpoint<JoinBody, JoinResponse>(
       async (req, userUniqId) => {
         const { qrCodeId } = req.body;
+
+        const qrPort = this.qrPortService.getByQrCode(qrCodeId);
+        if (!qrPort) {
+          throw new ApiError(400, "Invalid QR-code");
+        }
+
+        this.connectionService.updateRole(userUniqId, qrPort.role);
 
         const session = this.sessionService.joinOrCreateSession(
           qrCodeId,
@@ -64,10 +93,13 @@ export class SessionController implements ISessionController {
     );
   }
 
-  // todo - make roles check
   close() {
     return this.authEndpoint<CloseBody, CloseResponse>(
       async (req, userUniqId) => {
+        if (!this.connectionService.hasRole(userUniqId, ["admin"])) {
+          throw new ApiError(403, "Forbidden");
+        }
+
         const { sessionId } = req.body;
         this.sessionService.closeSession(sessionId);
         return { sessionId };

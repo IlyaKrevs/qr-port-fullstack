@@ -26,20 +26,22 @@ type ChangeStatusEndpoint = typeof createEndpoint<
 >;
 
 interface IOrderController {
-  orderService: OrderService;
   authEndpoint: typeof createEndpoint;
+  orderService: OrderService;
+
   create(): ReturnType<CreateEndpoint>;
   getAll(): ReturnType<GetAllEndpoint>;
   changeStatus(): ReturnType<ChangeStatusEndpoint>;
 }
 
 export class OrderController implements IOrderController {
-  orderService: OrderService;
   authEndpoint: typeof createEndpoint;
+  orderService: OrderService;
 
-  constructor(orderService: OrderService, authFn: typeof createEndpoint) {
-    this.orderService = orderService;
+  constructor(authFn: typeof createEndpoint, orderService: OrderService) {
     this.authEndpoint = authFn;
+    
+    this.orderService = orderService;
   }
 
   create() {

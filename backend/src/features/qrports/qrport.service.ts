@@ -5,6 +5,7 @@ interface IQrPortService {
   qrPortRepository: QrPortRepository;
   createQrPort(name: IQRPort["name"], role: IQRPort["role"]): IQRPort;
   getAll(): IQRPort[];
+  getByQrCode(qrCodeId: IQRPort["qrCode"]): IQRPort | undefined;
   delete(qrCode: IQRPort["qrCode"]): boolean;
 }
 
@@ -20,6 +21,10 @@ export class QrPortService implements IQrPortService {
 
   getAll(): IQRPort[] {
     return this.qrPortRepository.getAll();
+  }
+
+  getByQrCode(qrCodeId: IQRPort["qrCode"]): IQRPort | undefined {
+    return this.qrPortRepository.findByQrCode(qrCodeId);
   }
 
   delete(qrCode: IQRPort["qrCode"]): boolean {

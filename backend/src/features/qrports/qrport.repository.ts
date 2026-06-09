@@ -41,7 +41,7 @@ export class QrPortRepository implements IQrPortRepository {
   }
 
   delete(qrCode: IQRPort["qrCode"]): boolean {
-    const qrPort = this.qrPorts.find((i) => (i.qrCode = qrCode));
+    const qrPort = this.qrPorts.find((i) => i.qrCode === qrCode);
     if (qrPort) {
       this.qrPorts = this.qrPorts.filter((i) => i.qrCode !== qrCode);
       return true;

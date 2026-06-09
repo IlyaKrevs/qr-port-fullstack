@@ -6,10 +6,7 @@ import crypto from "crypto";
 import { getCryptoKeys } from "@utils/crypto/getCryptoKeys";
 
 import { ENDPOINTS } from "@globalShared/api/endpoints";
-import { catalogController } from "@features/catalog/catalogExport";
-import { orderController } from "@features/orders/orderExport";
-import { qrPortController } from "@features/qrports/qrportExport";
-import { sessionController } from "@features/session/sessionExport";
+import { controllers } from "@features/composition";
 
 const PORT = 3000;
 const serverId = "serverName" + "_" + crypto.randomUUID();
@@ -31,21 +28,22 @@ app.use(
 );
 
 // catalog
-app.get(ENDPOINTS.catalog.getAll, catalogController.getAll());
+
+app.get(ENDPOINTS.catalog.getAll, controllers.catalog.getAll());
 
 // orders
-app.post(ENDPOINTS.orders.getAll, orderController.getAll());
-app.post(ENDPOINTS.orders.create, orderController.create());
+app.post(ENDPOINTS.orders.getAll, controllers.order.getAll());
+app.post(ENDPOINTS.orders.create, controllers.order.create());
 
 // qrports
-app.get(ENDPOINTS.qrPorts.getAll, qrPortController.getAll());
-app.post(ENDPOINTS.qrPorts.create, qrPortController.create());
-app.delete(ENDPOINTS.qrPorts.deleteServer, qrPortController.delete());
+app.get(ENDPOINTS.qrPorts.getAll, controllers.qrPort.getAll());
+app.post(ENDPOINTS.qrPorts.create, controllers.qrPort.create());
+app.delete(ENDPOINTS.qrPorts.deleteServer, controllers.qrPort.delete());
 
 // sessions
-app.post(ENDPOINTS.sessions.start, sessionController.join());
-app.get(ENDPOINTS.sessions.getAllActive, sessionController.getAllActive());
-app.post(ENDPOINTS.sessions.close, sessionController.close());
+app.post(ENDPOINTS.sessions.start, controllers.session.join());
+app.get(ENDPOINTS.sessions.getAllActive, controllers.session.getAllActive());
+app.post(ENDPOINTS.sessions.close, controllers.session.close());
 
 // get public key + serverId for client
 app.get(ENDPOINTS.defaultData, (req, res) => {
