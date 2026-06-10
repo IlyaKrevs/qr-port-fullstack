@@ -3,6 +3,8 @@ import { QrPortRepository } from "./qrport.repository";
 
 interface IQrPortService {
   qrPortRepository: QrPortRepository;
+
+
   createQrPort(name: IQRPort["name"], role: IQRPort["role"]): IQRPort;
   getAll(): IQRPort[];
   getByQrCode(qrCodeId: IQRPort["qrCode"]): IQRPort | undefined;

@@ -39,7 +39,6 @@ const sessionController = new SessionController(
 const qrPortController = new QrPortController(
   createEndpoint,
   qrPortService,
-  connectionService,
 );
 
 const catalogController = new CatalogController(createEndpoint, catalogService);

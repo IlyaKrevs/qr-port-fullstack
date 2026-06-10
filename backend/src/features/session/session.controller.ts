@@ -27,8 +27,6 @@ interface ISessionController {
   authEndpoint: typeof createEndpoint;
 
   sessionService: SessionService;
-  qrPortService: QrPortService;
-  connectionService: ConnectionService;
 
   getAllActive(): ReturnType<GetAllActiveEndpoint>;
   join(): ReturnType<JoinEndpoint>;
@@ -39,29 +37,16 @@ export class SessionController implements ISessionController {
   authEndpoint: typeof createEndpoint;
 
   sessionService: SessionService;
-  qrPortService: QrPortService;
-  connectionService: ConnectionService;
 
-  constructor(
-    authFn: typeof createEndpoint,
-    sessions: SessionService,
-    qrPorts: QrPortService,
-    connection: ConnectionService,
-  ) {
+  constructor(authFn: typeof createEndpoint, sessions: SessionService) {
     this.authEndpoint = authFn;
 
     this.sessionService = sessions;
-    this.qrPortService = qrPorts;
-    this.connectionService = connection;
   }
 
   getAllActive() {
     return this.authEndpoint<GetAllActiveBody, GetAllActiveResponse>(
       async (req, userUniqId) => {
-        if (!this.connectionService.hasRole(userUniqId, ["admin"])) {
-          throw new ApiError(403, "Forbidden");
-        }
-
         const sessions = this.sessionService.getAllActive();
         return { sessions };
       },
@@ -72,13 +57,6 @@ export class SessionController implements ISessionController {
     return this.authEndpoint<JoinBody, JoinResponse>(
       async (req, userUniqId) => {
         const { qrCodeId } = req.body;
-
-        const qrPort = this.qrPortService.getByQrCode(qrCodeId);
-        if (!qrPort) {
-          throw new ApiError(400, "Invalid QR-code");
-        }
-
-        this.connectionService.updateRole(userUniqId, qrPort.role);
 
         const session = this.sessionService.joinOrCreateSession(
           qrCodeId,
@@ -96,10 +74,6 @@ export class SessionController implements ISessionController {
   close() {
     return this.authEndpoint<CloseBody, CloseResponse>(
       async (req, userUniqId) => {
-        if (!this.connectionService.hasRole(userUniqId, ["admin"])) {
-          throw new ApiError(403, "Forbidden");
-        }
-
         const { sessionId } = req.body;
         this.sessionService.closeSession(sessionId);
         return { sessionId };

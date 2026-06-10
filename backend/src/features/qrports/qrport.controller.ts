@@ -26,7 +26,6 @@ type DeleteQrPortEndpoint = typeof createEndpoint<
 interface IQrPortController {
   authEndpoint: typeof createEndpoint;
   qrPortService: QrPortService;
-  connectionService: ConnectionService;
 
   getAll(): ReturnType<GetAllQrEndpoint>;
   create(): ReturnType<CreateQrEndpoint>;
@@ -36,26 +35,16 @@ interface IQrPortController {
 export class QrPortController implements IQrPortController {
   authEndpoint: typeof createEndpoint;
   qrPortService: QrPortService;
-  connectionService: ConnectionService;
 
-  constructor(
-    authFn: typeof createEndpoint,
-    qrPortService: QrPortService,
-    connectionService: ConnectionService,
-  ) {
+  constructor(authFn: typeof createEndpoint, qrPortService: QrPortService) {
     this.authEndpoint = authFn;
 
     this.qrPortService = qrPortService;
-    this.connectionService = connectionService;
   }
 
   getAll() {
     return this.authEndpoint<GetAllQrBody, GetAllQrResponse>(
       async (req, userUniqId) => {
-        if (!this.connectionService.hasRole(userUniqId, ["admin"])) {
-          throw new ApiError(403, "Forbidden");
-        }
-
         const all = this.qrPortService.getAll();
         return all;
       },
@@ -65,10 +54,6 @@ export class QrPortController implements IQrPortController {
   create() {
     return this.authEndpoint<CreateQrBody, CreateQrResponse>(
       async (req, userUniqId) => {
-        if (!this.connectionService.hasRole(userUniqId, ["admin"])) {
-          throw new ApiError(403, "Forbidden");
-        }
-
         const { name, role } = req.body;
         if (!name || !role) {
           throw new ApiError(400, "Missing name or role");
@@ -85,10 +70,6 @@ export class QrPortController implements IQrPortController {
       DeleteQrPortResponse,
       DeleteQrPortParams
     >(async (req, userUniqId) => {
-      if (!this.connectionService.hasRole(userUniqId, ["admin"])) {
-        throw new ApiError(403, "Forbidden");
-      }
-
       const { qrCode } = req.params;
       const result = this.qrPortService.delete(qrCode);
       if (!result) {
